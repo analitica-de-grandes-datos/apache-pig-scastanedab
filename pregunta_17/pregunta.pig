@@ -20,9 +20,10 @@ $ pig -x local -f pregunta.pig
         /* >>> Escriba su respuesta a partir de este punto <<< */
 */
 
-data = load 'data.csv' using PigStorage(',') as (id:int,name:chararray,secondname:chararray,date:chararray,favcolor:chararray,number:int);
+data = LOAD 'data.csv' USING PigStorage(',') AS (num1:int, name:chararray, lastname:chararray, date:chararray, color:chararray, num2:int);
 
-filter_data = filter data by favcolor IN ('blue', 'black');
-output_data = foreach filter_data generate name, favcolor;
+datos = FOREACH data GENERATE name, color;
 
-store output_data into 'output/' using PigStorage(',');
+filtered_data = FILTER datos BY color == 'blue' OR color == 'black';
+
+STORE filtered_data INTO 'output' USING PigStorage(',');
