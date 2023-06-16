@@ -21,7 +21,18 @@ $ pig -x local -f pregunta.pig
         /* >>> Escriba su respuesta a partir de este punto <<< */
 */
 
-data = load 'data.csv' using PigStorage(',') as (id:int,name:chararray,secondname:chararray,date:chararray,favcolor:chararray,number:int);
-filter_data = filter data by not favcolor IN ('blue', 'black');
-output_data = foreach filter_data generate name, favcolor;
-store output_data into 'output/' using PigStorage(',');
+data = LOAD 'data.csv' USING PigStorage(',')
+    AS (
+            index:int,
+            name:chararray,
+            lastn:chararray,
+            birth:chararray,
+            color:chararray,
+            num:int          
+        ); 
+
+color_data = FILTER data BY NOT STARTSWITH(color,'blue') AND NOT STARTSWITH(color,'black'); 
+
+selected_data = FOREACH color_data GENERATE name, color; 
+
+STORE selected_data INTO 'output/' USING PigStorage(',');
