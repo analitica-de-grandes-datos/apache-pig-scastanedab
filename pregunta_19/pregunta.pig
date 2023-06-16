@@ -23,10 +23,7 @@ $ pig -x local -f pregunta.pig
 
 */
 
-data = LOAD 'data.csv' USING PigStorage(',') AS (num1:int, name:chararray, lastname:chararray, date:chararray, color:chararray, num2:int);
-
-datos = FOREACH data GENERATE name, color;
-
-filtered_data = FILTER datos BY (color MATCHES '^b.*' );
-
-STORE filtered_data INTO 'output' USING PigStorage(',');
+data = load 'data.csv' using PigStorage(',') as (id:int,name:chararray,secondname:chararray,date:chararray,favcolor:chararray,number:int);
+filter_data = filter data by favcolor matches 'b.*';
+output_data = foreach filter_data generate name, favcolor;
+store output_data into 'output/' using PigStorage(',');
