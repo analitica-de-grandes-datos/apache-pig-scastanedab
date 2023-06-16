@@ -21,12 +21,10 @@ $ pig -x local -f pregunta.pig
         /* >>> Escriba su respuesta a partir de este punto <<< */
 */
 
-u = LOAD 'data.csv' USING PigStorage (',') AS (id:INT, 
-firstname: CHARARRAY, 
-surname: CHARARRAY,
-birthday: CHARARRAY,
-color: CHARARRAY,
-quantity: INT); 
-col = FOREACH u GENERATE firstname, color;
-filtered_data = FILTER col BY color != 'blue' AND color != 'black';
-STORE filtered_data INTO 'output' USING PigStorage(',');
+data = load 'data.csv' using PigStorage(',') as (id:int,name:chararray,secondname:chararray,date:chararray,favcolor:chararray,number:int);
+
+filter_data = filter data by favcolor matches 'b.*';
+
+output_data = foreach filter_data generate name, favcolor;
+
+store output_data into 'output/' using PigStorage(',');
